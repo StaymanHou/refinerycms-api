@@ -1,24 +1,24 @@
 Refinery::Core::Engine.routes.draw do
   namespace :api, defaults: { format: 'json' } do
     namespace :v1 do
-      resources :images
+      resources :images, only: [:index, :show]
 
-      resources :pages do
-        resources :page_parts
+      resources :pages, only: [:index, :show] do
+        resources :page_parts, only: [:index, :show]
       end
 
-      resources :resources
+      resources :resources, only: [:index, :show]
 
       namespace :blog do
-        resources :posts
+        resources :posts, only: [:index, :show]
       end
 
-      namespace :inquiries do
-        resources :inquiries, only: [:new, :create, :index, :show, :destroy]
+      namespace :inquiries, only: [:index, :show] do
+        resources :inquiries, only: [:index, :show]
       end
     end
 
-    match 'v:api/*path', to: redirect("/api/v1/%{path}"), via: [:get, :post, :put, :patch, :delete]
-    match '*path', to: redirect("/api/v1/%{path}"), via: [:get, :post, :put, :patch, :delete]
+    # match 'v:api/*path', to: redirect("/api/v1/%{path}"), via: [:get]
+    # match '*path', to: redirect("/api/v1/%{path}"), via: [:get]
   end
 end

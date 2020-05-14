@@ -8,11 +8,9 @@ if defined?(Refinery::Inquiries)
             def index
               if params[:ids]
                 @inquiries = Refinery::Inquiries::Inquiry.
-                          accessible_by(current_ability, :read).
                           where(id: params[:ids].split(','))
               else
                 @inquiries = Refinery::Inquiries::Inquiry.
-                          accessible_by(current_ability, :read).
                           # ransack(params[:q]).result
                           order("created_at DESC")
               end
@@ -25,31 +23,10 @@ if defined?(Refinery::Inquiries)
               respond_with(@inquiry)
             end
 
-            def new
-            end
-
-            def create
-              authorize! :create, ::Refinery::Inquiries::Inquiry
-              @inquiry = Refinery::Inquiries::Inquiry.new(inquiry_params)
-
-              if @inquiry.save
-                respond_with(@inquiry, status: 201, default_template: :show)
-              else
-                invalid_resource!(@inquiry)
-              end
-            end
-
-            def destroy
-              authorize! :destroy, inquiry
-              inquiry.destroy
-              respond_with(inquiry, status: 204)
-            end
-
             private
 
             def inquiry
               @inquiry ||= Refinery::Inquiries::Inquiry.
-                          accessible_by(current_ability, :read).
                           find(params[:id])
             end
 

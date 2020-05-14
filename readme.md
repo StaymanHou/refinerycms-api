@@ -2,9 +2,12 @@
 
 [![Build Status](https://travis-ci.org/refinerycms-contrib/refinerycms-api.svg?branch=master)](https://travis-ci.org/refinerycms-contrib/refinerycms-api)
 
-This extension allows you to use a Rest API with Refinery CMS 3.0 and later.
+This extension allows you to use a Rest API with Refinery CMS 4.0 and later.
+
+This folk has simplified the original extension to drop unnecessary dependencies. This modified extension only serves a read-only API, with a global auth token instead of per-user API keys. The endpoints are not versioned either. 
 
 ## TODO
+* [ ] Update tests
 * [ ] Check Abilities
 * [ ] Fix specs
 
@@ -13,7 +16,7 @@ This extension allows you to use a Rest API with Refinery CMS 3.0 and later.
 Simply put this in the Gemfile of your Refinery application:
 
 ```ruby
-gem 'refinerycms-api', github: 'refinerycms-contrib/refinerycms-api', branch: 'master'
+gem 'refinerycms-api', git: 'https://github.com/StaymanHou/refinerycms-api', branch: 'master'
 ```
 
 Then run `bundle install` to install it.
@@ -23,18 +26,13 @@ Then run `bundle install` to install it.
 
 ```sh
 $ rails g refinery:api  # Generate initializer
-$ rake db:migrate
 ```
+
+Review `config/initializers/refinery/api.rb` for additional configurations.
 
 Then restart your server.
 
 ## Usage
-
-### Create an API Token for your user
-
-```ruby
-$ rake refinery_api:user:api_token:generate EMAIL=refinery@example.org
-```
 
 ### Pages
 

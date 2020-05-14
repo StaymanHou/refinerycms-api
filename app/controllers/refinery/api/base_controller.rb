@@ -6,17 +6,12 @@ module Refinery
       include Refinery::Api::ControllerSetup
       include Refinery::Api::ControllerHelpers::StrongParameters
 
-      attr_accessor :current_api_user
-
       before_action :set_content_type
-      before_action :load_user
-      before_action :authenticate_user
-      before_action :load_user_roles
+      before_action :authenticate_token
 
       rescue_from ActionController::ParameterMissing, with: :error_during_processing
       rescue_from ActiveRecord::RecordInvalid, with: :error_during_processing
       rescue_from ActiveRecord::RecordNotFound, with: :not_found
-      rescue_from CanCan::AccessDenied, with: :unauthorized
       rescue_from Refinery::Api::GatewayError, with: :gateway_error
 
       helper Refinery::Api::ApiHelpers
@@ -45,25 +40,15 @@ module Refinery
         headers["Content-Type"] = content_type
       end
 
-      def load_user
-        @current_api_user = Refinery::Api.user_class.find_by(refinery_api_key: api_key.to_s)
-      end
+      def authenticate_token
+        return unless requires_authentication?
+        return if api_key.present? && api_key == auth_token
 
-      def authenticate_user
-        return if @current_api_user
-
-        if requires_authentication? && api_key.blank?
+        if api_key.blank?
           render "refinery/api/errors/must_specify_api_key", status: 401 and return
-        elsif requires_authentication? || api_key.present?
-          render "refinery/api/errors/invalid_api_key", status: 401 and return
-        else
-          # An anonymous user
-          @current_api_user = Refinery::Api.user_class.new
         end
-      end
 
-      def load_user_roles
-        @current_user_roles = @current_api_user ? @current_api_user.roles.pluck(:title) : []
+        render "refinery/api/errors/invalid_api_key", status: 401 and return
       end
 
       def unauthorized
@@ -90,12 +75,12 @@ module Refinery
         Refinery::Api.requires_authentication
       end
 
-      def not_found
-        render "refinery/api/errors/not_found", status: 404 and return
+      def auth_token
+        Refinery::Api.auth_token
       end
 
-      def current_ability
-        Refinery::Ability.new(current_api_user)
+      def not_found
+        render "refinery/api/errors/not_found", status: 404 and return
       end
 
       def invalid_resource!(resource)

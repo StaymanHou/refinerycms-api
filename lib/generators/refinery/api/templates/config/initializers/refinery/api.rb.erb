@@ -2,6 +2,6 @@ Refinery::Api.configure do |config|
   # Requires authentication to access API
   # config.requires_authentication = <%= Refinery::Api.requires_authentication.inspect %>
 
-  # If you're grafting onto an existing app, change this to your User class
-  # config.user_class = <%= Refinery::Api.user_class.to_s.inspect %>
+  # if requires_authentication is set to true, specify the auth token
+  # config.auth_token = ENV['REFINERY_API_AUTH_TOKEN']
 end

@@ -1,5 +1,4 @@
 require 'refinerycms-core'
-require 'cancan'
 require 'responders'
 require 'rabl'
 

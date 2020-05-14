@@ -1,5 +1,3 @@
-require 'versioncake'
-
 module Refinery
   module Api
     class Engine < Rails::Engine
@@ -20,9 +18,6 @@ module Refinery
           # JSON.dump which doesn't display the miliseconds
           config.json_engine = ActiveSupport::JSON
         end
-
-        config.versioncake.supported_version_numbers = [1]
-        config.versioncake.extraction_strategy = :http_header
       end
 
       config.after_initialize do
