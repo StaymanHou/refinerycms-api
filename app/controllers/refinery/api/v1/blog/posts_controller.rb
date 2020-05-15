@@ -6,7 +6,6 @@ if defined?(Refinery::Blog)
           class PostsController < Refinery::Api::BaseController
 
             def index
-              byebug
               if params[:ids]
                 @posts = Refinery::Blog::Post.
                           where(id: params[:ids].split(','))
