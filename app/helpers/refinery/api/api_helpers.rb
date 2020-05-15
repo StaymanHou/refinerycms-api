@@ -46,7 +46,7 @@ module Refinery
       @@blog_post_attributes = [
         :id, :title, :body, :custom_teaser, :tag_list,
         :draft, :published_at, :custom_url, :user_id, :username, :browser_title,
-        :meta_description, :source_url, :source_url_title, category_ids: []
+        :meta_description, :source_url, :source_url_title, :categories
       ]
 
       @@inquiries_inquiry_attributes = [
